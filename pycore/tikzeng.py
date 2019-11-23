@@ -2,7 +2,7 @@
 import os
 
 def to_head( projectpath ):
-    pathlayers = os.path.join( projectpath, 'layers/' )
+    pathlayers = os.path.join( projectpath, 'layers/' ).replace('\\', '/')
     return r"""
 \documentclass[border=8pt, multi, tikz]{standalone} 
 \usepackage{import}
@@ -34,9 +34,9 @@ def to_begin():
 
 # layers definition
 
-def to_input( pathfile, to='(-3,0,0)', width=8, height=8 ):
+def to_input( pathfile, to='(-3,0,0)', width=8, height=8, name="temp" ):
     return r"""
-\node[canvas is zy plane at x=0] (temp) at """+ to +""" {\includegraphics[width="""+ str(width)+"cm"+""",height="""+ str(height)+"cm"+"""]{"""+ pathfile +"""}};
+\node[canvas is zy plane at x=0] (""" + name + """) at """+ to +""" {\includegraphics[width="""+ str(width)+"cm"+""",height="""+ str(height)+"cm"+"""]{"""+ pathfile +"""}};
 """
 
 # Conv
@@ -173,7 +173,7 @@ def to_connection( of, to):
 def to_skip( of, to, pos=1.25):
     return r"""
 \path ("""+ of +"""-southeast) -- ("""+ of +"""-northeast) coordinate[pos="""+ str(pos) +"""] ("""+ of +"""-top) ;
-\path ("""+ to +"""-south)  -- ("""+ to +"""-north)  coordinate[pos=1.25] ("""+ to +"""-top) ;
+\path ("""+ to +"""-south)  -- ("""+ to +"""-north)  coordinate[pos="""+ str(pos) +"""] ("""+ to +"""-top) ;
 \draw [copyconnection]  ("""+of+"""-northeast)  
 -- node {\copymidarrow}("""+of+"""-top)
 -- node {\copymidarrow}("""+to+"""-top)
